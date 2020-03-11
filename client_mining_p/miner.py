@@ -3,6 +3,7 @@ import requests
 
 import sys
 import json
+from timeit import default_timer as timer
 
 
 def proof_of_work(block):
@@ -64,8 +65,14 @@ if __name__ == '__main__':
 
         # TODO: Get the block from `data` and use it to look for a new proof
         print("Looking for proof...")
+        start = timer()
         new_proof = proof_of_work(data)
-        print("Valid proof found!")
+        end = timer()
+        runtime = end - start
+        hours = str(int(runtime//3600)).zfill(2)
+        minutes = str(int(runtime//60)).zfill(2)
+        seconds = str(int(runtime % 60)).zfill(2)
+        print(f"Valid proof found! Time spent: {hours}:{minutes}:{seconds}")
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
