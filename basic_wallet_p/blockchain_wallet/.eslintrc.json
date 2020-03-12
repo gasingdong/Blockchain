@@ -1,0 +1,32 @@
+{
+  "parser":  "babel-eslint",
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier/react",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": { 
+    "es6": true
+  },
+  "globals": {
+    "console": "readonly",
+    "document": "readonly",
+    "window": "readonly",
+    "it": "readonly",
+    "localStorage": "readonly"
+  },
+  "settings": {
+  "react": {
+    "version": "detect"
+    }
+  }
+}
