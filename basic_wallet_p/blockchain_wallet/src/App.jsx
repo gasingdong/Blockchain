@@ -10,7 +10,18 @@ const App = () => {
   };
 
   const handleSubmit = e => {
-    const { value } = e.target;
+    axios.get('http://localhost:5000/chain').then(res => {
+      const { chain } = res.data;
+      const userTransactions = [];
+      chain.forEach(node => {
+        node.transactions.forEach(transaction => {
+          if (transaction.recipient === name) {
+            userTransactions.push(transaction);
+          }
+        });
+      });
+      setTransactions(userTransactions);
+    });
     e.preventDefault();
   };
 
@@ -30,7 +41,9 @@ const App = () => {
           <input type="submit" value="Submit" />
         </form>
         <p>
-          {transactions ? `Transactions for ${name}` : 'Please enter a name.'}
+          {transactions
+            ? `Coins for ${name}: ${transactions.length}`
+            : 'Please enter a name.'}
         </p>
       </header>
     </div>
