@@ -1,20 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const App = () => {
+  const [name, setName] = useState('');
+  const [transactions, setTransactions] = useState(null);
+
+  const handleChange = e => {
+    setName(e.target.value);
+  };
+
+  const handleSubmit = e => {
+    const { value } = e.target;
+    e.preventDefault();
+  };
+
   return (
     <div className="App">
       <header className="App-header">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="name">
+            Name:
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={handleChange}
+            />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          {transactions ? `Transactions for ${name}` : 'Please enter a name.'}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
