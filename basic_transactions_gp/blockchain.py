@@ -13,12 +13,13 @@ class Blockchain(object):
         self.new_block(previous_hash=1, proof=100)
 
     def new_transaction(self, sender, recipient, amount):
-        self.current_transactions.append({
-            "sender": sender,
-            "recipient": recipient,
-            "amount": amount
-        })
-        return len(self.chain)
+        transaction = {
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount
+        }
+        self.current_transactions.append(transaction)
+        return len(self.chain) + 1
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -113,8 +114,8 @@ def mine():
             'message': f'Invalid proof'
         }), 400
     previous_hash = blockchain.hash(blockchain.last_block)
+    blockchain.new_transaction(0, data['id'], 1)
     block = blockchain.new_block(proof, previous_hash)
-    blockchain.new_transaction(0, id, 1)
     response = {
         'new_block': block,
         'message': 'New Block Forged'
