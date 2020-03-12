@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const App = () => {
   const [name, setName] = useState('');
-  const [transactions, setTransactions] = useState(null);
+  const [sent, setSent] = useState(null);
+  const [received, setReceived] = useState(null);
 
   const handleChange = e => {
     setName(e.target.value);
@@ -12,15 +13,19 @@ const App = () => {
   const handleSubmit = e => {
     axios.get('http://localhost:5000/chain').then(res => {
       const { chain } = res.data;
-      const userTransactions = [];
+      const sentT = [];
+      const receivedT = [];
       chain.forEach(node => {
         node.transactions.forEach(transaction => {
           if (transaction.recipient === name) {
-            userTransactions.push(transaction);
+            receivedT.push(transaction);
+          } else if (transaction.sender === name) {
+            sentT.push(transaction);
           }
         });
       });
-      setTransactions(userTransactions);
+      setSent(sentT);
+      setReceived(receivedT);
     });
     e.preventDefault();
   };
@@ -41,10 +46,30 @@ const App = () => {
           <input type="submit" value="Submit" />
         </form>
         <p>
-          {transactions
-            ? `Coins for ${name}: ${transactions.length}`
+          {received
+            ? `Coins for ${name}: ${received.reduce((acc, curr) => {
+                return acc + curr.amount;
+              }, 0)}`
             : 'Please enter a name.'}
         </p>
+        {(sent || received) && (
+          <>
+            <h2>Transactions: </h2>
+            {sent
+              .concat(received)
+              .filter(transaction => transaction)
+              .map((transaction, index) => (
+                <ul key={index}>
+                  <li key="sender">
+                    Sender:{' '}
+                    {transaction.sender === 0 ? 'Mining' : transaction.sender}
+                  </li>
+                  <li key="recipient">Recipient: {transaction.recipient}</li>
+                  <li key="amount">Amount: {transaction.amount}</li>
+                </ul>
+              ))}
+          </>
+        )}
       </header>
     </div>
   );
